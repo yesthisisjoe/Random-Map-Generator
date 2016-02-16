@@ -7,10 +7,11 @@
 //
 
 #import "ViewController.h"
+#import "Constants.h"
+#import "MapDrawer.h"
 
-@interface ViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface ViewController ()
 
-@property (strong, nonatomic) IBOutlet UICollectionView *mapCollectionView;
 @property (strong, nonatomic) IBOutlet UISlider *numberOfLakesSlider;
 @property (strong, nonatomic) IBOutlet UISlider *numberOfLakeTilesSlider;
 @property (strong, nonatomic) IBOutlet UISwitch *showIterationsSwitch;
@@ -19,19 +20,18 @@
 
 @implementation ViewController
 
-NSInteger tileArray[MAPWIDTH][MAPHEIGHT];
 NSInteger numberOfLakes;
 NSInteger numberOfLakeTiles;
 BOOL showIterations;
+uint8_t tileArray[375][375];
+MapDrawer *mapDrawer;
 
 NSMutableIndexSet *lakeCandidates = nil;
 NSMutableIndexSet *lakeTiles = nil;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [self.mapCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"MapTile"];
-    
+
     numberOfLakes = _numberOfLakesSlider.value;
     numberOfLakeTiles = _numberOfLakeTilesSlider.value;
     showIterations = _showIterationsSwitch.on;
@@ -50,21 +50,21 @@ void createLakeTileWithCandidates(NSInteger x, NSInteger y) {
     }
     
     //calculate adjacent tiles
-    NSInteger x0 = (x+1)%MAPWIDTH;
+    NSInteger x0 = (x+1)%mapWidth;
     NSInteger y0 = y;
-    NSInteger x1 = (x-1)%MAPWIDTH;
+    NSInteger x1 = (x-1)%mapWidth;
     NSInteger y1 = y;
     NSInteger x2 = x;
-    NSInteger y2 = (y+1)%MAPHEIGHT;
+    NSInteger y2 = (y+1)%mapHeight;
     NSInteger x3 = x;
-    NSInteger y3 = (y-1)%MAPHEIGHT;
+    NSInteger y3 = (y-1)%mapHeight;
     
     //protect tiles from negative coordinates
     if (x1 < 0) {
-        x1 = MAPWIDTH-1;
+        x1 = mapWidth-1;
     }
     if (y3 < 0) {
-        y3 = MAPHEIGHT-1;
+        y3 = mapHeight-1;
     }
     
     //encodes coordinate & stores in lake candidates array
@@ -100,13 +100,13 @@ void updateMapDataSource() {
 }
 
 NSInteger encodeCoordinate(NSInteger xCoordinate, NSInteger yCoordinate) {
-    return xCoordinate*MAPWIDTH + yCoordinate;
+    return xCoordinate*mapWidth + yCoordinate;
 }
 
 NSInteger decodeX(NSInteger encodedCoordinate) {
-    NSInteger decodedX = encodedCoordinate / MAPWIDTH;
+    NSInteger decodedX = encodedCoordinate / mapWidth;
     
-    if (decodedX == MAPWIDTH) {
+    if (decodedX == mapWidth) {
         return 0;
     } else {
         return decodedX;
@@ -114,35 +114,13 @@ NSInteger decodeX(NSInteger encodedCoordinate) {
 }
 
 NSInteger decodeY(NSInteger encodedCoordinate) {
-    return encodedCoordinate % MAPHEIGHT;
+    return encodedCoordinate % mapHeight;
 }
-
-//- (void)chooseCandidate: (NSInteger)lakeTilesRemaining {
-//    if (lakeTilesRemaining == 0) {
-//        return;
-//    }
-//    
-//    NSInteger randomNum = arc4random_uniform([lakeCandidates count]-1);
-//    NSInteger index = [lakeCandidates firstIndex];
-//    
-//    for (NSUInteger i = 0; i < randomNum; i++) {
-//        index = [lakeCandidates indexGreaterThanIndex:index];
-//    }
-//    
-//    createLakeTileWithCandidates(decodeX(index), decodeY(index));
-//    
-//    if (showIterations) {
-//        updateMapDataSource();
-//        [[self mapCollectionView] reloadData];
-//    }
-//    
-//    [[self chooseCandidate] lakeTilesRemaining-1];
-//}
 
 - (IBAction)generateButton:(id)sender {
     //initialize map with grass (value 1)
-    for (NSInteger i = 0; i<MAPWIDTH; i++) {
-        for (NSInteger j = 0; j<MAPHEIGHT; j++) {
+    for (NSInteger i = 0; i<mapWidth; i++) {
+        for (NSInteger j = 0; j<mapHeight; j++) {
             if (arc4random_uniform(5) == 1) {
                 tileArray[i][j] = 4;
             } else {
@@ -156,8 +134,8 @@ NSInteger decodeY(NSInteger encodedCoordinate) {
     
     //choose random spots on the map where lakes tiles appear
     for (NSInteger l=0; l<numberOfLakes; l++) {
-        NSInteger i = arc4random_uniform(MAPWIDTH);
-        NSInteger j = arc4random_uniform(MAPWIDTH);
+        NSInteger i = arc4random_uniform((uint32_t) mapWidth);
+        NSInteger j = arc4random_uniform((uint32_t) mapWidth);
         tileArray[i][j] = 2;
         
         createLakeTileWithCandidates(i, j);
@@ -168,7 +146,7 @@ NSInteger decodeY(NSInteger encodedCoordinate) {
     
     //choose a random index from lakeTileCandidates to transform into a lake tile
     for (NSInteger i=0; i<numberOfLakeTiles; i++) {
-        randomNum = arc4random_uniform([lakeCandidates count] -1);
+        randomNum = arc4random_uniform((uint32_t) [lakeCandidates count] -1);
         index = [lakeCandidates firstIndex];
         
         for (NSUInteger i = 0; i < randomNum; i++) {
@@ -179,12 +157,19 @@ NSInteger decodeY(NSInteger encodedCoordinate) {
         
         if (showIterations && i%100 == 0) {
             updateMapDataSource();
-            [[self mapCollectionView] reloadData];
         }
     }
     
     updateMapDataSource();
-    [self.mapCollectionView reloadData];
+    [self drawMap];
+}
+
+-(void)drawMap{
+    mapDrawer = [[MapDrawer alloc] init];
+    uint8_t (*tileArrayPtr)[375] = tileArray;
+    mapDrawer.tileArray = tileArrayPtr;
+    [mapDrawer setFrame:CGRectMake(0, 0, 375, 375)];
+    [self.view addSubview: mapDrawer];
 }
 
 - (IBAction)numberOfLakesSlider:(id)sender {
@@ -202,43 +187,6 @@ NSInteger decodeY(NSInteger encodedCoordinate) {
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-#pragma mark - UICollectionView Datasource
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return MAPTILES;
-}
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return 1;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MapTile" forIndexPath:indexPath];
-    NSInteger index = indexPath.item;
-    
-    NSInteger i = index / MAPWIDTH;
-    NSInteger j = index % MAPHEIGHT;
-    
-    switch (tileArray[i][j]) {
-        case 1:
-            cell.backgroundColor = [UIColor greenColor];
-            break;
-        case 2:
-            cell.backgroundColor = [UIColor cyanColor];
-            break;
-        case 3:
-            cell.backgroundColor = [UIColor blueColor];
-            break;
-        case 4:
-            cell.backgroundColor = [UIColor brownColor];
-            break;
-        default:
-            cell.backgroundColor = [UIColor redColor];
-            break;
-    }
-    
-    return cell;
 }
 
 @end

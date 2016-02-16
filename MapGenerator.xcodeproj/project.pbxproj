@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D83478881C729BC70077EFC5 /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = D83478871C729BC70077EFC5 /* Constants.m */; };
+		D834788B1C72A2B00077EFC5 /* MapDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = D834788A1C72A2B00077EFC5 /* MapDrawer.m */; };
 		D84655FB1C654F9600D2F690 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D84655FA1C654F9600D2F690 /* main.m */; };
 		D84655FE1C654F9600D2F690 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D84655FD1C654F9600D2F690 /* AppDelegate.m */; };
 		D84656011C654F9600D2F690 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D84656001C654F9600D2F690 /* ViewController.m */; };
@@ -36,12 +38,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D83478861C729BC70077EFC5 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		D83478871C729BC70077EFC5 /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		D83478891C72A2B00077EFC5 /* MapDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapDrawer.h; sourceTree = "<group>"; };
+		D834788A1C72A2B00077EFC5 /* MapDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapDrawer.m; sourceTree = "<group>"; };
 		D84655F61C654F9500D2F690 /* MapGenerator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapGenerator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D84655FA1C654F9600D2F690 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D84655FC1C654F9600D2F690 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D84655FD1C654F9600D2F690 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		D84655FF1C654F9600D2F690 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		D84656001C654F9600D2F690 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		D84655FF1C654F9600D2F690 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		D84656001C654F9600D2F690 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D84656031C654F9600D2F690 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D84656061C654F9600D2F690 /* MapGenerator.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MapGenerator.xcdatamodel; sourceTree = "<group>"; };
 		D84656081C654F9600D2F690 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -105,6 +111,8 @@
 			children = (
 				D84655FC1C654F9600D2F690 /* AppDelegate.h */,
 				D84655FD1C654F9600D2F690 /* AppDelegate.m */,
+				D83478891C72A2B00077EFC5 /* MapDrawer.h */,
+				D834788A1C72A2B00077EFC5 /* MapDrawer.m */,
 				D84655FF1C654F9600D2F690 /* ViewController.h */,
 				D84656001C654F9600D2F690 /* ViewController.m */,
 				D84656021C654F9600D2F690 /* Main.storyboard */,
@@ -121,6 +129,8 @@
 			isa = PBXGroup;
 			children = (
 				D84655FA1C654F9600D2F690 /* main.m */,
+				D83478861C729BC70077EFC5 /* Constants.h */,
+				D83478871C729BC70077EFC5 /* Constants.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -276,10 +286,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D83478881C729BC70077EFC5 /* Constants.m in Sources */,
 				D84656011C654F9600D2F690 /* ViewController.m in Sources */,
 				D84655FE1C654F9600D2F690 /* AppDelegate.m in Sources */,
 				D84656071C654F9600D2F690 /* MapGenerator.xcdatamodeld in Sources */,
 				D84655FB1C654F9600D2F690 /* main.m in Sources */,
+				D834788B1C72A2B00077EFC5 /* MapDrawer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -501,6 +513,7 @@
 				D84656281C654F9600D2F690 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D84656291C654F9600D2F690 /* Build configuration list for PBXNativeTarget "MapGeneratorTests" */ = {
 			isa = XCConfigurationList;
@@ -509,6 +522,7 @@
 				D846562B1C654F9600D2F690 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D846562C1C654F9600D2F690 /* Build configuration list for PBXNativeTarget "MapGeneratorUITests" */ = {
 			isa = XCConfigurationList;
@@ -517,6 +531,7 @@
 				D846562E1C654F9600D2F690 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
